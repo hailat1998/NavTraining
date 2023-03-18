@@ -31,7 +31,11 @@ import androidx.navigation.compose.NavHost
 import com.example.compose.rally.ui.components.RallyTabRow
 import com.example.compose.rally.ui.theme.RallyTheme
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.rally.ui.accounts.AccountsScreen
+import com.example.compose.rally.ui.bills.BillsScreen
+import com.example.compose.rally.ui.overview.OverviewScreen
 
 /**
  * This Activity recreates part of the Rally Material Study from
@@ -49,8 +53,11 @@ class RallyActivity : ComponentActivity() {
 @Composable
 fun RallyApp() {
     RallyTheme {
-        var currentScreen: RallyDestination by remember { mutableStateOf(Overview) }
+        //var currentScreen: RallyDestination by remember { mutableStateOf(Overview) }
         val navController= rememberNavController()
+        val currentBackStack by navController.currentBackStackEntryAsState()
+        val currentDestination = currentBackStack?.destination
+        val currentScreen = rallyTabRowScreens.find { it.route == currentDestination?.route } ?: Overview
         Scaffold(
             topBar = {
                 RallyTabRow(
@@ -67,13 +74,16 @@ fun RallyApp() {
             ) {
                 // builder parameter will be defined here as the graph
                 composable(route = Overview.route) {
-                    Overview.screen()
+                    OverviewScreen(
+                        onClickSeeAllAccounts = { navController.navigateSingleTopTo(Accounts.route) },
+                        onClickSeeAllBills = { navController.navigateSingleTopTo(Bills.route) }
+                    )
                 }
                 composable(route = Accounts.route) {
-                    Accounts.screen()
+                    AccountsScreen()
                 }
                 composable(route = Bills.route) {
-                    Bills.screen()
+                    BillsScreen()
                 }
             }
         }
