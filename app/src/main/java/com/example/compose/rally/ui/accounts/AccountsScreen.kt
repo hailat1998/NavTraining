@@ -23,17 +23,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.navigation.NavHostController
 import com.example.compose.rally.R
+import com.example.compose.rally.SingleAccount
 import com.example.compose.rally.data.UserData
+import com.example.compose.rally.navigateSingleTopTo
 import com.example.compose.rally.ui.components.AccountRow
 import com.example.compose.rally.ui.components.StatementBody
+
 
 /**
  * The Accounts screen.
  */
 @Composable
 fun AccountsScreen(
-    onAccountClick: (String) -> Unit = {},
+    onAccountClick: (String) -> Unit = {}
 ) {
     val amountsTotal = remember { UserData.accounts.map { account -> account.balance }.sum() }
     StatementBody(
@@ -79,4 +83,7 @@ fun SingleAccountScreen(
             color = row.color
         )
     }
+}
+private fun NavHostController.navigateToSingleAccount(accountType: String) {
+    this.navigateSingleTopTo("${SingleAccount.route}/$accountType")
 }
